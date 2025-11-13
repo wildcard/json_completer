@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "buildCommand": "cd rust && cargo build --release && cd .. && npm run build --filter=website",
+  "devCommand": "npm run dev --filter=website",
+  "installCommand": "npm install",
+  "framework": null,
+  "outputDirectory": "apps/website/.next",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "env": {
+    "JSON_COMPLETER_BIN_PATH": "../../target/release/json_completer"
+  },
+  "build": {
+    "env": {
+      "JSON_COMPLETER_BIN_PATH": "../../target/release/json_completer"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/apps/website/$1"
+    }
+  ]
+}

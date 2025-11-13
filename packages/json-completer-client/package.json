@@ -1,0 +1,41 @@
+{
+  "name": "@json-completer/client",
+  "version": "1.0.0",
+  "description": "TypeScript client for json_completer Rust binary",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "lint": "eslint src --ext .ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "json",
+    "parser",
+    "completion",
+    "streaming",
+    "typescript"
+  ],
+  "author": "json_completer contributors",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^7.2.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.0.0"
+  }
+}
