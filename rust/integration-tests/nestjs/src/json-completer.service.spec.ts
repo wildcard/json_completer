@@ -166,7 +166,8 @@ describe('JsonCompleterService (Integration)', () => {
 
     it('should handle empty and whitespace', async () => {
       const result1 = await service.complete('  {  ');
-      expect(result1.trim()).toBe('{}');
+      // Whitespace is preserved in the output
+      expect(result1).toBe('  {  }');
 
       const result2 = await service.complete('');
       expect(result2).toBe('');
@@ -198,8 +199,9 @@ describe('JsonCompleterService (Integration)', () => {
     });
 
     it('should handle large JSON documents', async () => {
-      // Generate a large partial JSON
-      const largeArray = '{"data": [' + Array(1000).fill('{"id": 1, "value": "test"').join(',');
+      // Generate a large partial JSON with properly closed objects
+      const items = Array(1000).fill(0).map((_, i) => `{"id": ${i}, "value": "test"}`);
+      const largeArray = '{"data": [' + items.join(',');
 
       const result = await service.complete(largeArray);
 
