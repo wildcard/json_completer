@@ -1,6 +1,29 @@
 # JsonCompleter
 
-A Ruby gem that converts partial JSON strings into valid JSON with high-performance incremental parsing. Efficiently processes streaming JSON with O(n) complexity for new data by maintaining parsing state between chunks. Handles truncated primitives, missing values, and unclosed structures without reprocessing previously parsed data.
+A library that converts partial JSON strings into valid JSON with high-performance incremental parsing. Efficiently processes streaming JSON with O(n) complexity for new data by maintaining parsing state between chunks. Handles truncated primitives, missing values, and unclosed structures without reprocessing previously parsed data.
+
+**Available in two implementations:**
+- **Ruby gem**: Original implementation for Ruby applications
+- **Rust cargo + CLI**: High-performance Rust implementation with CLI binary for language-agnostic interop (Node.js, TypeScript, Bun, Nest.js, Next.js, etc.)
+
+## 🚀 Quick Start
+
+### Ruby
+```ruby
+gem install json_completer
+```
+
+### Rust + CLI (for all languages)
+```bash
+cargo build --release
+# Use the binary: ./target/release/json_completer
+```
+
+See [Rust README](./rust/README.md) for integration with Node.js, TypeScript, Bun, Nest.js, and Next.js.
+
+---
+
+## Ruby Gem
 
 ## Installation
 

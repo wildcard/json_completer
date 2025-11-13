@@ -1,0 +1,17 @@
+[package]
+name = "json_completer_cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "CLI tool for json_completer - complete partial/truncated JSON strings"
+
+[[bin]]
+name = "json_completer"
+path = "src/main.rs"
+
+[dependencies]
+json_completer = { path = "../json_completer" }
+serde.workspace = true
+serde_json.workspace = true
