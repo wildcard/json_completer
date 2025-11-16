@@ -22,7 +22,7 @@ jobs:
           override: true
 
       - name: Cache Cargo registry
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cargo/registry
           key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
@@ -30,7 +30,7 @@ jobs:
             ${{ runner.os }}-cargo-registry-
 
       - name: Cache Cargo index
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cargo/git
           key: ${{ runner.os }}-cargo-git-${{ hashFiles('**/Cargo.lock') }}
@@ -38,7 +38,7 @@ jobs:
             ${{ runner.os }}-cargo-git-
 
       - name: Cache Cargo build
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: target
           key: ${{ runner.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
@@ -66,7 +66,7 @@ jobs:
           ./verify-binary.sh
 
       - name: Upload binary as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: json_completer-binary
           path: target/release/json_completer
@@ -81,7 +81,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Download binary artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: json_completer-binary
           path: target/release/
@@ -106,7 +106,7 @@ jobs:
 
       - name: Upload Nest.js test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: nestjs-test-results
           path: rust/integration-tests/nestjs/coverage/
@@ -121,7 +121,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Download binary artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: json_completer-binary
           path: target/release/
@@ -146,7 +146,7 @@ jobs:
 
       - name: Upload Next.js test results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: nextjs-test-results
           path: rust/integration-tests/nextjs/coverage/
