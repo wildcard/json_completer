@@ -21,6 +21,28 @@ cargo build --release
 
 See [Rust README](./rust/README.md) for integration with Node.js, TypeScript, Bun, Nest.js, and Next.js.
 
+## 🤔 Should I Use This?
+
+**Quick answer**: Use json_completer when JSON is truncated due to infrastructure limits or streaming, and performance matters.
+
+### ✅ Perfect For:
+- **Streaming JSON from LLMs** (OpenAI, Claude) - Real-time UI updates with O(n) performance
+- **AWS Lambda/API Gateway** - Hit the 6MB/10MB limits
+- **Log aggregation** - CloudWatch (1MB), Datadog (900KB), Splunk (10KB default) truncation
+- **Network timeouts** - Recover partial data from incomplete responses
+- **Large JSON (>10 KB)** - Where O(n²) naive parsing becomes a bottleneck
+
+### ❌ NOT For:
+- **Syntax errors** (missing quotes, trailing commas) → Use [jsonrepair](https://github.com/josdejong/jsonrepair)
+- **Small data (<1 KB)** → Simple try-catch is faster
+- **Schema validation** → Use JSON Schema validators
+- **APIs you control** → Fix the architecture (compress, paginate, use S3)
+
+### 📚 Learn More:
+- **[Quick Decision Guide](docs/QUICK_DECISION_GUIDE.md)** - 30-second decision tree
+- **[Full Use Case Analysis](docs/USE_CASE_ANALYSIS.md)** - Deep dive into when/why/how
+- **Performance**: 10-50x faster than naive approaches for large/streaming JSON
+
 ---
 
 ## Ruby Gem
