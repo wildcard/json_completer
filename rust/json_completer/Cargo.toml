@@ -1,0 +1,30 @@
+[package]
+name = "json_completer"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "A library for completing partial/truncated JSON strings into valid JSON, with support for streaming/incremental processing"
+keywords = ["json", "parser", "streaming", "completion", "validation"]
+categories = ["parsing", "encoding"]
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
+
+[lib]
+name = "json_completer"
+path = "src/lib.rs"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+wasm-bindgen = { version = "0.2", optional = true }
+
+[features]
+default = []
+wasm = ["wasm-bindgen"]
+
+[dev-dependencies]
+serde_json.workspace = true

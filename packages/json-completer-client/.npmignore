@@ -1,0 +1,57 @@
+# Source files (only ship dist/)
+src/
+test/
+examples/
+
+# TypeScript config
+tsconfig.json
+tsconfig.*.json
+
+# Build tools
+.eslintrc*
+.prettierrc*
+.editorconfig
+
+# Testing
+*.test.ts
+*.test.js
+*.spec.ts
+*.spec.js
+coverage/
+.nyc_output/
+
+# Development
+node_modules/
+.git/
+.gitignore
+.DS_Store
+*.log
+*.swp
+*.swo
+*~
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Editor directories
+.vscode/
+.idea/
+*.sublime-*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Documentation (keep README.md and CHANGELOG.md)
+docs/
+*.draft.md
+
+# Keep these files
+!README.md
+!CHANGELOG.md
+!LICENSE
+!dist/

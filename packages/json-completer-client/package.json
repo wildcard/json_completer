@@ -1,0 +1,74 @@
+{
+  "name": "@json-completer/client",
+  "version": "1.0.0",
+  "description": "High-performance TypeScript/Node.js client for json_completer - Complete partial JSON with streaming support",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "npm run build && node --import tsx --test test/**/*.test.ts",
+    "test:unit": "node --import tsx --test test/**/*.test.ts",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build && npm run typecheck"
+  },
+  "keywords": [
+    "json",
+    "parser",
+    "completion",
+    "streaming",
+    "typescript",
+    "llm",
+    "openai",
+    "claude",
+    "json-parser",
+    "json-streaming",
+    "incremental",
+    "truncated-json",
+    "partial-json"
+  ],
+  "author": "json_completer contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aha-app/json_completer.git",
+    "directory": "packages/json-completer-client"
+  },
+  "bugs": {
+    "url": "https://github.com/aha-app/json_completer/issues"
+  },
+  "homepage": "https://github.com/aha-app/json_completer#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.7.0",
+    "tsup": "^7.2.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.0.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  }
+}

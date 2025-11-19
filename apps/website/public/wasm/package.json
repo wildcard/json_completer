@@ -1,0 +1,31 @@
+{
+  "name": "json_completer",
+  "type": "module",
+  "collaborators": [
+    "json_completer contributors"
+  ],
+  "description": "A library for completing partial/truncated JSON strings into valid JSON, with support for streaming/incremental processing",
+  "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aha-app/json_completer"
+  },
+  "files": [
+    "json_completer_bg.wasm",
+    "json_completer.js",
+    "json_completer.d.ts"
+  ],
+  "main": "json_completer.js",
+  "types": "json_completer.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ],
+  "keywords": [
+    "json",
+    "parser",
+    "streaming",
+    "completion",
+    "validation"
+  ]
+}

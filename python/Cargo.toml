@@ -1,0 +1,17 @@
+[package]
+name = "json_completer_python"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["json_completer contributors"]
+repository = "https://github.com/aha-app/json_completer"
+description = "Python bindings for json_completer - Complete truncated JSON with high-performance incremental parsing"
+
+[lib]
+name = "json_completer"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.22", features = ["extension-module"] }
+json_completer = { path = "../rust/json_completer" }
+serde_json = "1.0"

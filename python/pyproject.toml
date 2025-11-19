@@ -1,0 +1,75 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "json_completer"
+version = "0.1.0"
+description = "Complete truncated JSON strings with high-performance incremental parsing"
+readme = "README.md"
+authors = [
+    { name = "json_completer contributors" }
+]
+license = { text = "MIT" }
+keywords = ["json", "parser", "streaming", "completion", "llm", "api"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Rust",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Text Processing",
+    "Topic :: Internet :: WWW/HTTP",
+]
+requires-python = ">=3.8"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "mypy>=1.0",
+    "ruff>=0.1.0",
+]
+benchmark = [
+    "pytest-benchmark>=4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/aha-app/json_completer"
+Documentation = "https://github.com/aha-app/json_completer/tree/main/python"
+Repository = "https://github.com/aha-app/json_completer"
+Issues = "https://github.com/aha-app/json_completer/issues"
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+python-source = "python"
+module-name = "json_completer"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --cov=json_completer --cov-report=term-missing --cov-report=html"
+
+[tool.black]
+line-length = 100
+target-version = ['py38', 'py39', 'py310', 'py311', 'py312']
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true

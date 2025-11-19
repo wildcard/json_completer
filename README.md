@@ -1,6 +1,51 @@
 # JsonCompleter
 
-A Ruby gem that converts partial JSON strings into valid JSON with high-performance incremental parsing. Efficiently processes streaming JSON with O(n) complexity for new data by maintaining parsing state between chunks. Handles truncated primitives, missing values, and unclosed structures without reprocessing previously parsed data.
+A library that converts partial JSON strings into valid JSON with high-performance incremental parsing. Efficiently processes streaming JSON with O(n) complexity for new data by maintaining parsing state between chunks. Handles truncated primitives, missing values, and unclosed structures without reprocessing previously parsed data.
+
+**Available in two implementations:**
+- **Ruby gem**: Original implementation for Ruby applications
+- **Rust cargo + CLI**: High-performance Rust implementation with CLI binary for language-agnostic interop (Node.js, TypeScript, Bun, Nest.js, Next.js, etc.)
+
+## 🚀 Quick Start
+
+### Ruby
+```ruby
+gem install json_completer
+```
+
+### Rust + CLI (for all languages)
+```bash
+cargo build --release
+# Use the binary: ./target/release/json_completer
+```
+
+See [Rust README](./rust/README.md) for integration with Node.js, TypeScript, Bun, Nest.js, and Next.js.
+
+## 🤔 Should I Use This?
+
+**Quick answer**: Use json_completer when JSON is truncated due to infrastructure limits or streaming, and performance matters.
+
+### ✅ Perfect For:
+- **Streaming JSON from LLMs** (OpenAI, Claude) - Real-time UI updates with O(n) performance
+- **AWS Lambda/API Gateway** - Hit the 6MB/10MB limits
+- **Log aggregation** - CloudWatch (1MB), Datadog (900KB), Splunk (10KB default) truncation
+- **Network timeouts** - Recover partial data from incomplete responses
+- **Large JSON (>10 KB)** - Where O(n²) naive parsing becomes a bottleneck
+
+### ❌ NOT For:
+- **Syntax errors** (missing quotes, trailing commas) → Use [jsonrepair](https://github.com/josdejong/jsonrepair)
+- **Small data (<1 KB)** → Simple try-catch is faster
+- **Schema validation** → Use JSON Schema validators
+- **APIs you control** → Fix the architecture (compress, paginate, use S3)
+
+### 📚 Learn More:
+- **[Quick Decision Guide](docs/QUICK_DECISION_GUIDE.md)** - 30-second decision tree
+- **[Full Use Case Analysis](docs/USE_CASE_ANALYSIS.md)** - Deep dive into when/why/how
+- **Performance**: 10-50x faster than naive approaches for large/streaming JSON
+
+---
+
+## Ruby Gem
 
 ## Installation
 
@@ -77,16 +122,44 @@ result3 = completer.complete('{"users": [{"name": "Alice"}, {"name": "Bob"}]}')
 - **Truncated API responses**: Complete JSON that was cut off due to size limits
 - **Log parsing**: Handle incomplete JSON entries in log files
 
-## Contributing
+## 🗺️ Roadmap
 
+We're building the industry-standard JSON completion library across all major programming ecosystems. See our comprehensive roadmap:
+
+- **[📋 Full Roadmap](ROADMAP.md)** - Complete vision, features, and timeline
+- **[⚡ Executive Summary](docs/ROADMAP_SUMMARY.md)** - Quick reference for stakeholders
+- **[🔧 Implementation Guide](docs/ROADMAP_IMPLEMENTATION.md)** - For maintainers executing the roadmap
+
+**Coming Soon**:
+- Python, Go, Ruby, and Java bindings
+- Interactive playground on our website
+- Schema-aware completion
+- Framework integrations (Express, FastAPI, Spring)
+- Enterprise features and cloud integrations
+
+[Vote on features](https://github.com/aha-app/json_completer/discussions) or [view our progress](https://github.com/aha-app/json_completer/projects).
+
+## 🤝 Contributing
+
+We welcome contributions of all kinds! Whether you're fixing bugs, adding features, improving documentation, or helping in the community.
+
+**Get Started**:
+- Read our [Contributing Guide](CONTRIBUTING.md)
+- Browse [good first issues](https://github.com/aha-app/json_completer/labels/good-first-issue)
+- Join our [Discord community](https://discord.gg/json-completer) (coming soon)
+- Check the [roadmap](ROADMAP.md) for upcoming features
+
+**Quick Contribution Steps**:
 1. Fork the repository
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Make your changes and add tests
-4. Run the test suite (`bundle exec rspec`)
+4. Run the test suite (`bundle exec rspec` for Ruby, `cargo test` for Rust)
 5. Commit your changes (`git commit -am 'Add some feature'`)
 6. Push to the branch (`git push origin my-new-feature`)
 7. Create a new Pull Request
 
-## License
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+## 📄 License
 
 This gem is available as open source under the terms of the [MIT License](LICENSE).
