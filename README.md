@@ -100,16 +100,44 @@ result3 = completer.complete('{"users": [{"name": "Alice"}, {"name": "Bob"}]}')
 - **Truncated API responses**: Complete JSON that was cut off due to size limits
 - **Log parsing**: Handle incomplete JSON entries in log files
 
-## Contributing
+## 🗺️ Roadmap
 
+We're building the industry-standard JSON completion library across all major programming ecosystems. See our comprehensive roadmap:
+
+- **[📋 Full Roadmap](ROADMAP.md)** - Complete vision, features, and timeline
+- **[⚡ Executive Summary](docs/ROADMAP_SUMMARY.md)** - Quick reference for stakeholders
+- **[🔧 Implementation Guide](docs/ROADMAP_IMPLEMENTATION.md)** - For maintainers executing the roadmap
+
+**Coming Soon**:
+- Python, Go, Ruby, and Java bindings
+- Interactive playground on our website
+- Schema-aware completion
+- Framework integrations (Express, FastAPI, Spring)
+- Enterprise features and cloud integrations
+
+[Vote on features](https://github.com/aha-app/json_completer/discussions) or [view our progress](https://github.com/aha-app/json_completer/projects).
+
+## 🤝 Contributing
+
+We welcome contributions of all kinds! Whether you're fixing bugs, adding features, improving documentation, or helping in the community.
+
+**Get Started**:
+- Read our [Contributing Guide](CONTRIBUTING.md)
+- Browse [good first issues](https://github.com/aha-app/json_completer/labels/good-first-issue)
+- Join our [Discord community](https://discord.gg/json-completer) (coming soon)
+- Check the [roadmap](ROADMAP.md) for upcoming features
+
+**Quick Contribution Steps**:
 1. Fork the repository
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Make your changes and add tests
-4. Run the test suite (`bundle exec rspec`)
+4. Run the test suite (`bundle exec rspec` for Ruby, `cargo test` for Rust)
 5. Commit your changes (`git commit -am 'Add some feature'`)
 6. Push to the branch (`git push origin my-new-feature`)
 7. Create a new Pull Request
 
-## License
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+## 📄 License
 
 This gem is available as open source under the terms of the [MIT License](LICENSE).
