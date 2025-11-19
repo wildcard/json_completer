@@ -31,6 +31,10 @@
 
 use serde::{Deserialize, Serialize};
 
+// Export WASM bindings when the wasm feature is enabled
+#[cfg(feature = "wasm")]
+pub mod wasm;
+
 /// Context type for tracking nested structures
 #[derive(Debug, Clone, PartialEq, Eq)]
 enum Context {

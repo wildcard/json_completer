@@ -1,0 +1,300 @@
+name: Python CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'python/**'
+      - 'rust/json_completer/**'
+      - '.github/workflows/python-ci.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'python/**'
+      - 'rust/json_completer/**'
+      - '.github/workflows/python-ci.yml'
+  workflow_dispatch:
+
+env:
+  RUST_BACKTRACE: 1
+
+jobs:
+  # Test on multiple platforms and Python versions
+  test:
+    name: Test - ${{ matrix.os }} - Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: python
+
+      - name: Install maturin
+        run: pip install maturin[patchelf]
+
+      - name: Build Python package
+        run: |
+          cd python
+          maturin develop --release
+
+      - name: Install test dependencies
+        run: |
+          cd python
+          pip install pytest pytest-cov
+
+      - name: Run tests
+        run: |
+          cd python
+          pytest tests/ -v --cov=json_completer --cov-report=xml --cov-report=term
+
+      - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./python/coverage.xml
+          flags: python
+          name: python-${{ matrix.python-version }}
+
+  # Type checking with mypy
+  type-check:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          cd python
+          pip install mypy
+
+      - name: Run mypy
+        run: |
+          cd python
+          mypy --install-types --non-interactive json_completer.pyi tests/
+
+  # Linting with ruff
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install ruff
+
+      - name: Run ruff check
+        run: |
+          cd python
+          ruff check .
+
+      - name: Run ruff format check
+        run: |
+          cd python
+          ruff format --check .
+
+  # Code formatting with black
+  format:
+    name: Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install black
+        run: pip install black
+
+      - name: Check formatting
+        run: |
+          cd python
+          black --check .
+
+  # Performance benchmarks
+  benchmark:
+    name: Benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: python
+
+      - name: Install dependencies
+        run: |
+          pip install maturin[patchelf]
+          cd python
+          maturin develop --release
+          pip install pytest-benchmark
+
+      - name: Run benchmarks
+        run: |
+          cd python
+          pytest benchmarks/ --benchmark-only --benchmark-json=../benchmark-results.json
+
+      - name: Store benchmark result
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: Python Benchmarks
+          tool: 'pytest'
+          output-file-path: benchmark-results.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          alert-threshold: '120%'
+          comment-on-alert: true
+          fail-on-alert: true
+
+  # Build wheels for multiple platforms
+  build-wheels:
+    name: Build wheels - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install maturin
+        run: pip install maturin[patchelf]
+
+      - name: Build wheels
+        run: |
+          cd python
+          maturin build --release --out ../dist
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.os }}
+          path: dist/*.whl
+          retention-days: 7
+
+  # Build source distribution
+  build-sdist:
+    name: Build source distribution
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install maturin
+        run: pip install maturin[patchelf]
+
+      - name: Build sdist
+        run: |
+          cd python
+          maturin sdist --out ../dist
+
+      - name: Upload sdist
+        uses: actions/upload-artifact@v4
+        with:
+          name: sdist
+          path: dist/*.tar.gz
+          retention-days: 7
+
+  # Test installation from wheel
+  test-wheel:
+    name: Test wheel installation
+    needs: [build-wheels]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Download wheels
+        uses: actions/download-artifact@v4
+        with:
+          name: wheels-ubuntu-latest
+          path: dist
+
+      - name: Install from wheel
+        run: |
+          pip install dist/*.whl
+          python -c "import json_completer; print('Successfully imported json_completer')"
+          python -c "import json_completer; result = json_completer.complete('{\"test\":'); print(f'Test result: {result}')"
+
+  # Publish to PyPI (commented out - enable when ready)
+  # publish-pypi:
+  #   name: Publish to PyPI
+  #   needs: [test, type-check, lint, format, benchmark, build-wheels, build-sdist, test-wheel]
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+  #   environment:
+  #     name: pypi
+  #     url: https://pypi.org/project/json_completer/
+  #   permissions:
+  #     id-token: write
+  #
+  #   steps:
+  #     - name: Download artifacts
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         pattern: wheels-*
+  #         merge-multiple: true
+  #         path: dist
+  #
+  #     - name: Download sdist
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: sdist
+  #         path: dist
+  #
+  #     - name: Publish to PyPI
+  #       uses: pypa/gh-action-pypi-publish@release/v1
+  #       with:
+  #         packages-dir: dist/

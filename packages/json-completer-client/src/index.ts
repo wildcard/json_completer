@@ -260,6 +260,3 @@ export async function complete(
   const client = new JsonCompleterClient(options);
   return client.complete(partialJson);
 }
-
-// Re-export types
-export type { JsonCompleterOptions };

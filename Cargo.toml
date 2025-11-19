@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "rust/json_completer",
     "rust/json_completer_cli",
+    "python",
 ]
 
 [workspace.package]

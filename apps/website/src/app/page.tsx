@@ -1,3 +1,5 @@
+import Playground from '@/components/Playground';
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-white to-gray-50">
@@ -101,23 +103,8 @@ export default function Home() {
       {/* Live Demo Section */}
       <section id="demo" className="container mx-auto px-4 py-16">
         <h2 className="text-4xl font-bold text-center mb-12">Try It Live</h2>
-        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-8">
-          <p className="text-center text-gray-600 mb-6">
-            Interactive demo coming soon! For now, try the CLI or check the examples below.
-          </p>
-          <div className="bg-gray-50 rounded-lg p-6">
-            <h3 className="font-semibold mb-3">Quick Start:</h3>
-            <pre className="bg-gray-900 text-gray-100 p-4 rounded overflow-x-auto">
-{`# Build the binary
-cd rust
-cargo build --release
-
-# Try it out
-./target/release/json_completer '{"test":'
-
-# Output: {"test":null}`}
-            </pre>
-          </div>
+        <div className="max-w-7xl mx-auto">
+          <Playground />
         </div>
       </section>
 

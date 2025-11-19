@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WASM Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background: #f5f5f5;
+        }
+        .pass { background: #d4edda; border-color: #c3e6cb; }
+        .fail { background: #f8d7da; border-color: #f5c6cb; }
+        pre { background: white; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>json_completer WASM Test</h1>
+    <div id="status">Loading WASM module...</div>
+    <div id="tests"></div>
+
+    <script type="module">
+        const testsDiv = document.getElementById('tests');
+        const statusDiv = document.getElementById('status');
+
+        async function runTests() {
+            try {
+                // Import and initialize WASM
+                statusDiv.textContent = 'Initializing WASM...';
+                const init = (await import('./apps/website/public/wasm/json_completer.js')).default;
+                const { complete } = await import('./apps/website/public/wasm/json_completer.js');
+
+                await init({ module_or_path: './apps/website/public/wasm/json_completer_bg.wasm' });
+                statusDiv.textContent = 'WASM loaded successfully!';
+
+                // Test cases
+                const tests = [
+                    {
+                        name: 'Incomplete object',
+                        input: '{"name": "John", "age":',
+                        expected: '{"name": "John", "age":null}'
+                    },
+                    {
+                        name: 'Incomplete string',
+                        input: '{"message": "Hello',
+                        expected: '{"message": "Hello"}'
+                    },
+                    {
+                        name: 'Nested objects',
+                        input: '{"user": {"name": "Alice", "data": {',
+                        expected: '{"user": {"name": "Alice", "data": {}}}'
+                    },
+                    {
+                        name: 'Array',
+                        input: '{"items": [1, 2, 3',
+                        expected: '{"items": [1, 2, 3]}'
+                    },
+                    {
+                        name: 'Complex nested',
+                        input: '{"users": [{"name": "Alice"}, {"name":',
+                        expected: '{"users": [{"name": "Alice"}, {"name":null}]}'
+                    }
+                ];
+
+                let passed = 0;
+                let failed = 0;
+
+                for (const test of tests) {
+                    const startTime = performance.now();
+                    const result = complete(test.input);
+                    const endTime = performance.now();
+                    const time = (endTime - startTime).toFixed(2);
+
+                    const success = result === test.expected;
+                    if (success) passed++;
+                    else failed++;
+
+                    const div = document.createElement('div');
+                    div.className = `test ${success ? 'pass' : 'fail'}`;
+                    div.innerHTML = `
+                        <strong>${success ? '✅' : '❌'} ${test.name}</strong> (${time}ms)
+                        <pre>Input:    ${test.input}</pre>
+                        <pre>Expected: ${test.expected}</pre>
+                        <pre>Got:      ${result}</pre>
+                    `;
+                    testsDiv.appendChild(div);
+                }
+
+                // Summary
+                const summary = document.createElement('div');
+                summary.className = 'test';
+                summary.innerHTML = `
+                    <h2>Summary</h2>
+                    <p>Passed: ${passed}</p>
+                    <p>Failed: ${failed}</p>
+                `;
+                testsDiv.appendChild(summary);
+
+            } catch (error) {
+                statusDiv.textContent = 'Error: ' + error.message;
+                console.error(error);
+            }
+        }
+
+        runTests();
+    </script>
+</body>
+</html>
